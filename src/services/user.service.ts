@@ -1,15 +1,15 @@
 // import { Inject, Service } from "typedi";
 // import { InjectRepository } from "typeorm-typedi-extensions";
-import { UserRepository } from "../repositories/user.repository";
+// import { UserRepository } from "../repositories/user.repository";
 import { User } from "../entities/user.entity";
 import { CreateUserDto, UpdatUserDto } from "../dto/createUserDto";
+import { AppDataSource } from "../config/data-source";
 
 // @Service()
 // export 
 class UserService {
-  // constructor(@InjectRepository(User) private readonly userRepository: UserRepository) {}
   
-  // userRepository =  ------- UserRepository(User);
+  userRepository =  AppDataSource.getRepository(User);
 
   async getAllUsers(): Promise<User[]> 
   {
@@ -41,5 +41,4 @@ class UserService {
 }
 
 
-const userService = new UserService();
-export default userService;
+export const userService = new UserService();

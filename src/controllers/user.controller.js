@@ -11,30 +11,40 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const routing_controllers_1 = require("routing-controllers");
 const user_service_1 = require("../services/user.service");
-const user_entity_1 = require("../entities/user.entity");
-// import { CreateUserDto, updateUserDto } from "../"
+const createUserDto_1 = require("../dto/createUserDto");
 let UserController = class UserController {
-    constructor(userService) {
-        this.userService = userService;
-    }
     getAllUsers() {
-        return this.userService.getAllUsers();
+        return __awaiter(this, void 0, void 0, function* () {
+            // return "You can get the users";
+            return user_service_1.userService.getAllUsers();
+        });
     }
     getUserById(id) {
-        return this.userService.getUserById(id);
+        return __awaiter(this, void 0, void 0, function* () {
+            return user_service_1.userService.getUserById(id);
+        });
     }
     createUser(user) {
-        return this.userService.createUser(user);
+        return user_service_1.userService.createUser(user);
     }
     updateUser(id, updatedUser) {
-        return this.userService.updateUser(id, updatedUser);
+        return user_service_1.userService.updateUser(id, updatedUser);
     }
     deleteUser(id) {
-        return this.userService.deleteUser(id);
+        return user_service_1.userService.deleteUser(id);
     }
 };
 exports.UserController = UserController;
@@ -49,13 +59,13 @@ __decorate([
     __param(0, (0, routing_controllers_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUserById", null);
 __decorate([
     (0, routing_controllers_1.Post)("/"),
     __param(0, (0, routing_controllers_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [user_entity_1.User]),
+    __metadata("design:paramtypes", [createUserDto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "createUser", null);
 __decorate([
@@ -63,7 +73,7 @@ __decorate([
     __param(0, (0, routing_controllers_1.Param)("id")),
     __param(1, (0, routing_controllers_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number, createUserDto_1.UpdatUserDto]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "updateUser", null);
 __decorate([
@@ -71,9 +81,8 @@ __decorate([
     __param(0, (0, routing_controllers_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UserController.prototype, "deleteUser", null);
 exports.UserController = UserController = __decorate([
-    (0, routing_controllers_1.JsonController)("/users"),
-    __metadata("design:paramtypes", [user_service_1.UserService])
+    (0, routing_controllers_1.JsonController)('/users')
 ], UserController);
