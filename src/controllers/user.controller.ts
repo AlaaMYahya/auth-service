@@ -1,12 +1,13 @@
 import { JsonController, Get, Post, Put, Delete, Param, Body } from "routing-controllers";
-import { UserService } from "../services/user.service"
+import  userService  from "../services/user.service"
 import { User } from "../entities/user.entity";
 import { CreateUserDto, UpdatUserDto } from "../dto/createUserDto";
-import { Inject } from  "typedi";
+// import { Inject } from  "typedi";
 
 @JsonController('/users')
 export class UserController {
-  constructor(@Inject() private userService: UserService) {}
+  // constructor( private userService: UserService) {}
+  // userService = 
 
   @Get("/")
   async getAllUsers() : Promise<User[]>  {
