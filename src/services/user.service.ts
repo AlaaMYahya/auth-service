@@ -1,44 +1,36 @@
-// import { Inject, Service } from "typedi";
-// import { InjectRepository } from "typeorm-typedi-extensions";
-// import { UserRepository } from "../repositories/user.repository";
 import { User } from "../entities/user.entity";
 import { CreateUserDto, UpdatUserDto } from "../dto/createUserDto";
 import { AppDataSource } from "../config/data-source";
 
-// @Service()
-// export 
 class UserService {
-  
-  userRepository =  AppDataSource.getRepository(User);
+  userRepository = AppDataSource.getRepository(User);
 
-  async getAllUsers(): Promise<User[]> 
-  {
+  async getAllUsers(): Promise<User[]> {
     return await this.userRepository.find();
   }
 
-   async getUserById(id: number)
-  //  : Promise<User | undefined> 
-  {
-    const user = await this.userRepository.findOne({where: {id}});
-    return user; 
+  async getUserById(
+    id: number, //  : Promise<User | undefined>
+  ) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    return user;
   }
 
   async createUser(user: CreateUserDto): Promise<User> {
-    return await this.userRepository.save(user);   
-     
+    return await this.userRepository.save(user);
   }
-  
 
-  async updateUser(id: number, updatedUser: UpdatUserDto ): Promise<User | undefined> {
-    // Partial<User>
+  async updateUser(
+    id: number,
+    updatedUser: UpdatUserDto,
+  ): Promise<User | undefined> {
     const user = await this.userRepository.save({ id, ...updatedUser });
-    return user; 
+    return user;
   }
 
   async deleteUser(id: number): Promise<void> {
     await this.userRepository.delete(id);
   }
 }
-
 
 export const userService = new UserService();

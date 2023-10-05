@@ -1,10 +1,11 @@
 import "reflect-metadata";
-import { createExpressServer, useContainer as routingControllersUseContainer } from "routing-controllers";
-import { createConnection } from "typeorm";
+import { useExpressServer } from "routing-controllers";
 import { UserController } from "./controllers/user.controller";
+import express from "express";
 
-    //update to  user express 
-  export const app = createExpressServer({
-    controllers: [UserController],
-  });
+//update to  userExpressServer
+const route = express();
 
+export const app = useExpressServer(route, {
+  controllers: [UserController],
+});
