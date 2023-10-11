@@ -13,6 +13,9 @@ import { CreateUserDto, UpdatUserDto } from "../dto/createUserDto";
 
 @JsonController("/users")
 export class UserController {
+
+
+
   @Get("/")
   async getAllUsers(): Promise<User[]> {
     // return "You can get the users";
@@ -27,8 +30,12 @@ export class UserController {
   }
 
   @Post("/")
-  createUser(@Body() user: CreateUserDto): Promise<User> {
-    return userService.createUser(user);
+  async createUser(@Body() user: CreateUserDto): Promise<User> {
+    const { username, email, password, bio} = user;
+    const hashedPassword = await userService.hashPassword(password)
+    const Addusers = await userService.createUser( username, email, hashedPassword, bio);
+    return  Addusers;    
+
   }
 
   @Put("/:id")

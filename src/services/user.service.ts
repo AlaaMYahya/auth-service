@@ -1,9 +1,19 @@
 import { User } from "../entities/user.entity";
-import { CreateUserDto, UpdatUserDto } from "../dto/createUserDto";
+import {
+  //  CreateUserDto,
+   UpdatUserDto } from "../dto/createUserDto";
 import { AppDataSource } from "../config/data-source";
+import bcrypt from "bcrypt";
+
 
 class UserService {
   userRepository = AppDataSource.getRepository(User);
+
+  async hashPassword (password : string): Promise<string>{
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
+  }
 
   async getAllUsers(): Promise<User[]> {
     return await this.userRepository.find();
@@ -16,8 +26,13 @@ class UserService {
     return user;
   }
 
-  async createUser(user: CreateUserDto): Promise<User> {
-    return await this.userRepository.save(user);
+  async createUser(username: string, email: string, password:string, bio:string): Promise<User> {
+    const user = new User();
+    user.username = username;
+    user.email = email;
+    user.password = password;
+    user.bio = bio;
+    return this.userRepository.save(user);
   }
 
   async updateUser(
