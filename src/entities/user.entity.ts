@@ -3,7 +3,19 @@ import { IsNotEmpty } from "class-validator";
 
 
 @Entity()
+class Session{
+  @Column()
+  refreshToken: {
+    type: string,
+    default: "",
+  }
+}
+
+@Entity()
 export class User {
+    // static authenticate(): any {
+    //     throw new Error('Method not implemented.');
+    // }
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,5 +33,19 @@ export class User {
 
   @Column({ nullable: true })
   bio?: string;
+
+  @Column()
+  accesshToken: string;
+
+  @Column()
+  refreshToken: { type: [Session],};
+    // static serializeUser: any;
   
 }
+
+// User.set("toJSON", {
+//   transform: function (doc, ret, options) {
+//     delete ret.refreshToken
+//     return ret
+//   },
+// })
