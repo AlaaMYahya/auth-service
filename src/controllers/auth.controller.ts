@@ -28,12 +28,12 @@ import {
 
         const accessToken = sign({
             id: user.id
-        }, "eeb88ea4804fa705dfcb6ec7dbde399c30a0576d24529746ade60600b45cbaa2c166db405c69631bb1ad76794e388727b7fdf3ba6fbc19365af553ecebb7b7ce",
+        }, "ACCESS_TOKEN",
          {expiresIn : 60 * 60 });
 
         const refreshToken = sign({
             id: user.id
-        }, "cd8fe62cb2630f89c0fd0ca72b632264a7090e7c6c4a8a1e15fa20956b70fd6f5542553a9eae563d00ccbb2b83433aa41047295c0b334a626c2d64245e431d93",
+        }, "REFRESH_TOKEN",
          {expiresIn: 24 * 60 * 60 })
 
         res.cookie('accessToken', accessToken, {
@@ -74,7 +74,7 @@ import {
         try{
             const refreshToken = req.cookies['refreshToken'];
 
-            const payload: any = verify(refreshToken, "cd8fe62cb2630f89c0fd0ca72b632264a7090e7c6c4a8a1e15fa20956b70fd6f5542553a9eae563d00ccbb2b83433aa41047295c0b334a626c2d64245e431d93")
+            const payload: any = verify(refreshToken, "REFRESH_TOKEN")
 
             if (!payload){
                 return res.status(401).send({
@@ -109,7 +109,7 @@ import {
             console.log(req.cookies);
             const accessToken = req.cookies['accessToken'];
 
-            const payload: any = verify(accessToken, "eeb88ea4804fa705dfcb6ec7dbde399c30a0576d24529746ade60600b45cbaa2c166db405c69631bb1ad76794e388727b7fdf3ba6fbc19365af553ecebb7b7ce");
+            const payload: any = verify(accessToken, "ACCESS_TOKEN");
 
             if (!payload){
                 return res.status(401).send({
