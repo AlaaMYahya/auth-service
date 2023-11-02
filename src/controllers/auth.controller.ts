@@ -2,6 +2,7 @@ import {
     Request, 
     Response 
 } from "express";
+import { Authorized, CurrentUser } from "routing-controllers";
 import { getRepository } from "typeorm";
 import { User } from "../entities/user.entity";
 import bcryptjs from "bcryptjs";
@@ -9,14 +10,19 @@ import {
     sign, 
     verify 
 } from "jsonwebtoken";
+import { config } from "../config/config";
 
-// import dotenv from 'dotenv'; 
-// dotenv.config();
 
-    export const Login = async (req: Request, res: Response) => {
+export class AuthService{
+   
+    @Authorized()
+    async login(req:Request, res:Response){
+    // export const Login = async (req: Request, res: Response) => {
        
         const { email, password } = req.body;
-        const user = await getRepository(User).findOne({
+        const user = await getRepository(User).findOne(
+            // @CurrentUser({ required: true }) user: User,
+        {
             where:{ email : email}
         });
         if(!user){
@@ -28,12 +34,12 @@ import {
 
         const accessToken = sign({
             id: user.id
-        }, "ACCESS_TOKEN",
+        }, config.accessTokenSecret as string ,
          {expiresIn : 60 * 60 });
 
         const refreshToken = sign({
             id: user.id
-        }, "REFRESH_TOKEN",
+        }, config.refreshTokenSecret!,
          {expiresIn: 24 * 60 * 60 })
 
         res.cookie('accessToken', accessToken, {
@@ -51,8 +57,9 @@ import {
         });
     }
 
-
-    export const Signup = async (req: Request, res:Response ) => {
+    @Authorized()
+    async signup(req: Request, res: Response){
+    // export const Signup = async (req: Request, res:Response ) => {
         const { username, email, password } =  req.body;
 
         const user = await getRepository(User).save({
@@ -64,17 +71,20 @@ import {
         res.send(user);
     }
 
-
-    export const Logout = async (req: Request, res: Response) => {
+    @Authorized()
+    async logout(req:Request,res:Response ){
+    // export const Logout = async (req: Request, res: Response) => {
         res.cookie('accessToke', '', {maxAge:0});
         res.cookie('refreshToken', '', {maxAge:0});
     }
 
-    export const Refresh = async (req: Request, res: Response) => {
+    @Authorized()
+    async refresh(req: Request, res: Response){
+    // export const Refresh = async (req: Request, res: Response) => {
         try{
             const refreshToken = req.cookies['refreshToken'];
 
-            const payload: any = verify(refreshToken, "REFRESH_TOKEN")
+            const payload: any = verify(refreshToken, config.refreshTokenSecret as string)
 
             if (!payload){
                 return res.status(401).send({
@@ -84,7 +94,7 @@ import {
 
             const accessToken = sign({
                 id: payload.id,
-            }, "eeb88ea4804fa705dfcb6ec7dbde399c30a0576d24529746ade60600b45cbaa2c166db405c69631bb1ad76794e388727b7fdf3ba6fbc19365af553ecebb7b7ce",
+            }, config.accessTokenSecret!, // ! or as string
              {expiresIn: 60 * 60 })
 
             res.cookie('accessToken', accessToken, {
@@ -103,13 +113,14 @@ import {
         }
     }
 
-
-    export const CheckUser = async (req: Request, res:Response) =>{
+    @Authorized()
+    async checkUser(req: Request, res: Response){
+    // export const CheckUser = async (req: Request, res:Response) =>{
         try {
             console.log(req.cookies);
             const accessToken = req.cookies['accessToken'];
 
-            const payload: any = verify(accessToken, "ACCESS_TOKEN");
+            const payload: any = verify(accessToken, config.accessTokenSecret!);
 
             if (!payload){
                 return res.status(401).send({
@@ -129,7 +140,9 @@ import {
                 })
             }
 
-            const { password, ...data } = user;
+            const { id,
+                // password,
+                 ...data } = user;
             res.send(data);
 
         }catch(e){
@@ -140,3 +153,4 @@ import {
         }
     }
 
+}
