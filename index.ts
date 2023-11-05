@@ -1,10 +1,8 @@
 import CookieParam from "cookie-parser";
 import express from "express";
 import cors from "cors";
-import { routes } from "./src/routes/routes";
+import { app } from "./src/app";
 
-
-const app = express();
 
 app.use(express.json());
 app.use(CookieParam());
@@ -13,8 +11,6 @@ app.use(cors({
   credentials: true 
 })
 );
-
-routes(app);
 
 app.listen(3005, () => {
   console.log("Server is running on port 3005");
