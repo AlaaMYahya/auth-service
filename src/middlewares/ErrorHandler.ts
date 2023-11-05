@@ -15,5 +15,6 @@ export class ErrorHandler implements  ExpressErrorMiddlewareInterface{
             return;
         }
         response.json(error);
+        next(error);     
     }
-}
+}   

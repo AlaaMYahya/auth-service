@@ -2,7 +2,7 @@ import {
     Request, 
     Response 
 } from "express";
-import { Authorized, CurrentUser } from "routing-controllers";
+import { Authorized } from "routing-controllers";
 import { getRepository } from "typeorm";
 import { User } from "../entities/user.entity";
 import bcryptjs from "bcryptjs";
@@ -34,7 +34,7 @@ export class AuthService{
 
         const accessToken = sign({
             id: user.id
-        }, config.accessTokenSecret as string ,
+        }, config.accessTokenSecret! ,
          {expiresIn : 60 * 60 });
 
         const refreshToken = sign({
@@ -84,7 +84,7 @@ export class AuthService{
         try{
             const refreshToken = req.cookies['refreshToken'];
 
-            const payload: any = verify(refreshToken, config.refreshTokenSecret as string)
+            const payload: any = verify(refreshToken, config.refreshTokenSecret!)
 
             if (!payload){
                 return res.status(401).send({
